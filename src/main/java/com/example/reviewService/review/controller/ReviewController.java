@@ -27,7 +27,8 @@ public class ReviewController {
 
 
         reviewDto.setShopId(Integer.valueOf(reviewDto.getShopId())); // list를 눌렀을때 shopId가 넘어온다
-        reviewDto.setUserId(securityService.getIdAtToken());
+//        reviewDto.setUserId(securityService.getIdAtToken());
+        reviewDto.setUserId(reviewDto.getUserId());
         reviewDto.setRate(Integer.valueOf(reviewDto.getRate()));
 
 
