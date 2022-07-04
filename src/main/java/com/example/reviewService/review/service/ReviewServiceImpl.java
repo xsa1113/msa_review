@@ -13,8 +13,8 @@ public class ReviewServiceImpl implements reviewService {
     @Override
     public Boolean createReview(ReviewDto reviewDto) {
 
-        ReviewDto new_review =reviewMapper.createReview(reviewDto);
-        if(new_review.getId()!=null){
+        Integer new_review =reviewMapper.createReview(reviewDto);
+        if(new_review == 1){
             return true;
         }else{
             return false;
@@ -23,6 +23,6 @@ public class ReviewServiceImpl implements reviewService {
 
     @Override
     public Integer countReview(Integer userId) {
-        return reviewRepo.countByUserId(userId);
+        return reviewMapper.countByUserId(userId);
     }
 }

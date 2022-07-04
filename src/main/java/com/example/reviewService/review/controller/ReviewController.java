@@ -3,14 +3,13 @@ package com.example.reviewService.review.controller;
 
 
 
+import com.example.reviewService.config.SecurityService;
 import com.example.reviewService.review.model.ReviewDto;
 import com.example.reviewService.review.service.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("review")
@@ -20,9 +19,36 @@ public class ReviewController {
     @Autowired
     ReviewServiceImpl reviewService;
 
+    @Autowired
+    SecurityService securityService;
+
     @PostMapping("/create")
-    public ResponseEntity<?> createReview(@RequestBody ReviewDto reviewDto){
-        return null;
+    public ResponseEntity<?> createReview(@RequestBody ReviewDto reviewDto ){
+
+
+        reviewDto.setShopId(Integer.valueOf(reviewDto.getShopId())); // list를 눌렀을때 shopId가 넘어온다
+        reviewDto.setUserId(securityService.getIdAtToken());
+        reviewDto.setRate(Integer.valueOf(reviewDto.getRate()));
+
+
+        System.out.println(reviewDto.getUserId());
+        System.out.println(reviewDto.getShopId());
+        System.out.println(reviewDto.getContent());
+        System.out.println(reviewDto.getPhoto());
+        System.out.println(reviewDto.getRate());
+
+        HttpStatus httpStatus = reviewService.createReview(reviewDto) == true ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(httpStatus);
     }
 
+    @GetMapping("/count")
+    public Integer countReview(){
+        System.out.println("count..............................");
+        Integer userId = securityService.getIdAtToken();
+
+        Integer count = reviewService.countReview(userId);
+        System.out.println("count.............................."+userId+count);
+        return count;
+    }
 }
